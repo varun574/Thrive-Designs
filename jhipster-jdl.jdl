@@ -1,0 +1,138 @@
+
+entity Students{
+  id Integer, 
+  password String, //hashing
+  personalInfoId Integer,
+  email String, // authorization
+  name String,
+  isRegistered Boolean, // default:false
+  rollNo String
+}
+
+
+entity PersonalInfo{
+  id Integer, 
+  fatherName String,
+  motherName String,
+  dob String,
+  mobileNumber String,
+  certificates List,
+  department Department,
+  section String, 
+  educationLevel EducationLevel,
+  adress String
+}
+relationship OneToOne {
+	Students{personalInfoId} to PersonalInfo{id}
+}
+enum EducationLevel{
+ 	UG,
+	PG
+}
+entity Attachments{
+	id Integer,
+	url String,
+    name  Names
+}
+relationship OneToMany {
+	PersonalInfo{certificates} to Attachments
+}
+enum Names{
+	Tenth, 
+    Inter,
+    UG,
+    Id
+}
+
+enum Department{
+	CSE,
+	ECE,
+	IT
+}
+
+entity Application{
+	id Integer 
+	personalInfoId PersonalInfo,
+	status Status,
+	applicationFee Boolean,
+    uuid String
+}
+enum Status{
+	Initiated,
+	UnderReview,
+	Accepted,
+	Rejected
+}
+relationship OneToOne {
+	Application{personalInfoId} to PersonalInfo{id}
+}
+
+entity AcademicProfile{ 
+	id Integer,
+    rollNumber String,
+	result Result, // nosql
+	subjectList List, //subject table
+	attendence Attendance, //nosql
+	year AcademicYear, //nosql
+}
+relationship OneToMany {
+	AcademicProfile{result} to Result
+}
+relationship OneToMany {
+	AcademicProfile{subjectList} to Subject
+}
+relationship OneToOne {
+	AcademicProfile{attendence} to Attendance
+}
+relationship OneToOne {
+	AcademicProfile{year} to AcademicYear
+}
+
+entity AcademicYear{
+   year Integer, 
+   semester Semester
+}
+
+enum Semester{
+        One,
+        Two
+}
+
+entity Subject{
+    id Integer
+    subjectId Integer,
+    subjectName String,
+    department Department
+}
+
+entity Attendance{
+     studentID Integer,
+     totalDays Integer,
+     presentDays Integer,
+}
+
+entity Result{
+        studentName String,
+        rollNo Integer,
+        subjectResults List, //subject results
+        cgpa Double,
+        sgpa Double,
+}
+relationship OneToMany {
+	Result{subjectList} to SubjectResult
+}
+
+entity SubjectResult{
+    Id Integer,
+    subjectId String,
+    subjectName String,
+    grade Grade,
+}
+
+enum Grade{
+        A,
+	   S,
+       B
+} 
+
+
